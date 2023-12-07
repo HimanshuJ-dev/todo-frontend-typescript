@@ -1,15 +1,18 @@
 import { TASKS_TYPES } from "../types/tasksTypes";
 
 export type tasksResponseType = {
+  _id:String,
     title: String,
     description: String,
     priority: String,
     status: String,
-    creator: String
+  creator: String,
+  createdAt: Date,
+    updatedAt: Date
 }
 
 export type tasksState = {
-    readonly tasks: tasksResponseType | null,
+    readonly tasks: tasksResponseType[] | null,
     readonly isTasksLoading: boolean,
     readonly errorTasks: String | null,
     readonly isCreatingTask: boolean

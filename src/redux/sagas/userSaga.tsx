@@ -3,6 +3,7 @@ import { USER_TYPES } from "../types/userTypes";
 
 import { getUser, createUser } from "../service/userService";
 import { payloadType } from "../actions/userActions";
+import { useNavigate } from "react-router-dom";
 
 type responseType = {
     token: Number
@@ -12,7 +13,7 @@ type responseType = {
 
 //generator function to login user
 // payload type has to be solved to be more specific
-function* workGetUsersFetch(payload: any) {
+function* workGetUsersFetch({payload}:any) {
     yield put({ type: USER_TYPES.GET_USERS_LOADING });
     const response: responseType = yield call(() => getUser(payload))
     try {
@@ -31,8 +32,9 @@ function* workGetUsersFetch(payload: any) {
 
 //generator function to create new user
 // payload type has to be solved to be more specific
-function* workCreateUserFetch(payload: any) {
+function* workCreateUserFetch({payload}: any) {
     yield put({ type: USER_TYPES.CREATE_USER_LOADING });
+    console.log("payload from saga", payload);
     const response: responseType = yield call(() => createUser(payload));
     try {
         if (!response.userId) {
@@ -42,6 +44,7 @@ function* workCreateUserFetch(payload: any) {
             type: USER_TYPES.GET_USERS_SUCCESS,
             response,
         })
+
     }
     catch (error) {
         yield put({ type: USER_TYPES.CREATE_USER_FAILED });

@@ -1,6 +1,6 @@
 import { USER_TYPES } from "../types/userTypes";
 
-type userResponseType = { token: Number; userId: Number; name: String };
+type userResponseType = { token: String; userId: String; name: String };
 
 export type UserState = {
   readonly response: userResponseType | null;
