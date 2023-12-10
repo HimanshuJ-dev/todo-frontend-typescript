@@ -24,7 +24,7 @@ export function assignTask({
       .catch((err) => console.log("error occured:", err));
 }
 
-export function assignedTasks(currentUser: String) {
+export function assignedTasks({currentUser}: { currentUser: String}) {
     return axios
       .get(`http://localhost:8080/assigned-Tasks/?id=${currentUser}`)
       .then((res) => res.data)
@@ -73,10 +73,10 @@ export function editAssignedTask({
       .catch((err) => console.log("error occured:", err));
 }
 
-export function recivedTasks(currentUser: String) {
-    return axios
-      .get(`http://localhost:8080/recieved-Tasks/?id=${currentUser}`)
-      .then((res) => res.data)
-      .catch((err) => console.log("error occured:", err));
+export function recivedTasks({ currentUser }: { currentUser: String }) {
+  return axios
+    .get(`http://localhost:8080/recieved-Tasks/?id=${currentUser}`)
+    .then((res) => res.data)
+    .catch((err) => console.log("error occured:", err));
 }
 

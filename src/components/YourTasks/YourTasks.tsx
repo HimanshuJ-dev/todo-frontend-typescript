@@ -8,28 +8,21 @@ import { useDispatch,useSelector } from 'react-redux';
 import { deleteTaskFetch, getTasksFetch, markTaskCancelledFetch, markTaskCompletedFetch } from '../../redux/actions/tasksActions';
 import { UserState } from '../../redux/reducers/userReducer';
 import { tasksResponseType, tasksState } from '../../redux/reducers/tasksReducer';
-
-type SingleTaskType = {
-  _id: String,
-  title: String,
-  description: String,
-  priority: String,
-  status: String,
-  creator: String,
-  createdAt: Date,
-  updatedAt: Date
-}
+import { assignedTasksFetch, recievedTasksFetch } from '../../redux/actions/assignedTasksActions';
 
 export const YourTasks = () => {
 
 
   const dispatch = useDispatch();
   // const currentUser = useSelector((state: UserState) => state.response?.userId);
-  const currentUser:String = "654db9dc218ef014cabae1cb";
-  const tasks = useSelector((state: tasksState) => state.tasks);
+  const currentUser = useSelector((state: any) => state.user.response?.userId);
+  
+  const tasks = useSelector((state: any) => state.tasks.tasks);
 
   useEffect(() => {
     dispatch(getTasksFetch(currentUser!));
+    dispatch(assignedTasksFetch(currentUser));
+    dispatch(recievedTasksFetch(currentUser));
   }, []);
 
   const DeleteTask = (taskId: String, currentUser: String) => {
@@ -61,7 +54,7 @@ export const YourTasks = () => {
     }
 
   //change this to some known solution
-  const SingleTaskCard = (tasks as Array<tasksResponseType>).map((task, index) => {
+  const SingleTaskCard = (tasks as Array<tasksResponseType>).map((task) => {
     return (
       <Card sx={{ minWidth: 275, mb: "5px", borderRadius: "10px" }}>
         <CardContent>

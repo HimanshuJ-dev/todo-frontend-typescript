@@ -48,7 +48,7 @@ export const tasksReducer = (state = INITIAL_TASKS, action: actionType) => {
       case TASKS_TYPES.GET_TASKS_FAILED:
         return {
           ...state,
-          tasks: null,
+          tasks: [],
           errorTasks: "500: Internal server error, could not load tasks!",
           isTasksLoading: false,
           isTaskCreating: false,

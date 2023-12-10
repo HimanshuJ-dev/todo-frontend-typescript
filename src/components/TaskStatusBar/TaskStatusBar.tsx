@@ -5,6 +5,8 @@ import NotificationImportantIcon from "@mui/icons-material/NotificationImportant
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { FC, Fragment, ReactElement } from 'react';
+import { useSelector } from 'react-redux';
+import { tasksResponseType } from '../../redux/reducers/tasksReducer';
 
 type CustomListItemProps = {
   primaryText: string;
@@ -29,15 +31,62 @@ const CustomListItem: FC<CustomListItemProps> = ({
 };
 
 export const TaskStatusBar = () => {
+  const tasks = useSelector((state: any) => state.tasks.tasks);
+  const ReceivedTasks = useSelector((state: any) => state.recievedTasks.tasks);
+  const totalTasksAssigned = useSelector(
+    (state: any) => state.assignedTasks.tasks
+  ).length;
 
-    const totalTasks = 150;
-    const totalReceivedTasks = 150;
-    const totalTasksAssigned = 80;
-    const completedTasksNumber = 10;
-    const urgestTasksNumber = 20;
-    const highPriorityTasksNumber = 30;
-    const normalTasksNumber = 40;
-    const cancelledTasksNumber = 50;
+  const totalTasks = tasks.length;
+  const totalReceivedTasks = ReceivedTasks.length;
+  const completedTasksNumber = tasks.filter(
+    (task: tasksResponseType) => task.status === "Completed"
+  ).length;
+  const urgestTasksNumber = tasks.filter(
+    (task: tasksResponseType) =>
+      task.priority === "Urgent" &&
+      task.status !== "Completed" &&
+      task.status !== "Cancelled"
+  ).length;
+  const highPriorityTasksNumber = tasks.filter(
+    (task: tasksResponseType) =>
+      task.priority === "High" &&
+      task.status !== "Completed" &&
+      task.status !== "Cancelled"
+  ).length;
+  const normalTasksNumber = tasks.filter(
+    (task: tasksResponseType) =>
+      task.priority === "Normal" &&
+      task.status !== "Completed" &&
+      task.status !== "Cancelled"
+  ).length;
+  const cancelledTasksNumber = tasks.filter(
+    (task: tasksResponseType) => task.status === "Cancelled"
+  ).length;
+  const completedReceivedTasksNumber = ReceivedTasks.filter(
+    (task: tasksResponseType) => task.status === "Completed"
+  ).length;
+  const urgestReceivedTasksNumber = ReceivedTasks.filter(
+    (task: tasksResponseType) =>
+      task.priority === "Urgent" &&
+      task.status !== "Completed" &&
+      task.status !== "Cancelled"
+  ).length;
+  const highPriorityReceivedTasksNumber = ReceivedTasks.filter(
+    (task: tasksResponseType) =>
+      task.priority === "High" &&
+      task.status !== "Completed" &&
+      task.status !== "Cancelled"
+  ).length;
+  const normalReceivedTasksNumber = ReceivedTasks.filter(
+    (task: tasksResponseType) =>
+      task.priority === "Normal" &&
+      task.status !== "Completed" &&
+      task.status !== "Cancelled"
+  ).length;
+  const cancelledReceivedTasksNumber = ReceivedTasks.filter(
+    (task: tasksResponseType) => task.status === "Cancelled"
+  ).length;
 
   return (
     <Box flex={2} p={2} sx={{ display: { xs: "none", sm: "block" } }}>
@@ -82,25 +131,25 @@ export const TaskStatusBar = () => {
           sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
         >
           <CustomListItem
-            primaryText={`${completedTasksNumber} task(s) completed`}
+            primaryText={`${completedReceivedTasksNumber} task(s) completed`}
             CustomIcon={() => <TaskAltIcon sx={{ color: "#3cb043" }} />}
           />
           <CustomListItem
-            primaryText={`${urgestTasksNumber} urgent task(s)`}
+            primaryText={`${urgestReceivedTasksNumber} urgent task(s)`}
             CustomIcon={() => (
               <NotificationImportantIcon sx={{ color: "red" }} />
             )}
           />
           <CustomListItem
-            primaryText={`${highPriorityTasksNumber} high priority task(s)`}
+            primaryText={`${highPriorityReceivedTasksNumber} high priority task(s)`}
             CustomIcon={() => <AlarmOnIcon sx={{ color: "orange" }} />}
           />
           <CustomListItem
-            primaryText={`${normalTasksNumber} normal task(s)`}
+            primaryText={`${normalReceivedTasksNumber} normal task(s)`}
             CustomIcon={() => <AssignmentIcon sx={{ color: "blue" }} />}
           />
           <CustomListItem
-            primaryText={`${cancelledTasksNumber} task(s) cancelled`}
+            primaryText={`${cancelledReceivedTasksNumber} task(s) cancelled`}
             CustomIcon={() => <CancelIcon sx={{ color: "grey" }} />}
           />
         </List>

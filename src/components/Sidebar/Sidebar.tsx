@@ -16,13 +16,28 @@ import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import CallReceivedIcon from "@mui/icons-material/CallReceived";
 import NightlightIcon from "@mui/icons-material/Nightlight";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { turnOnDarkMode, turnOnLightMode } from "../../redux/actions/userActions";
 
-type SidebarProps = {
-  setMode: React.Dispatch<React.SetStateAction<string>>
-  mode: String
-}
+export const Sidebar: React.FC = () => {
 
-export const Sidebar: React.FC<SidebarProps> = ({ mode, setMode }) => {
+  const currentMode = useSelector((state: any) => state.user.darkmode)
+
+  const dispatch = useDispatch();
+
+  const modeToggleHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
+
+    if (event.target.checked) {
+      // The switch is turned on
+      dispatch(turnOnDarkMode())
+      // Add your specific function for ON state here
+    } else {
+      // The switch is turned off
+      dispatch(turnOnLightMode())
+      // Add your specific function for OFF state here
+    }
+  };
+
   return (
     <Box flex={1} p={2} sx={{ display: { xs: "none", sm: "block" } }}>
       <Box position="fixed">
@@ -73,7 +88,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ mode, setMode }) => {
                 <NightlightIcon />
               </ListItemIcon>
               <Switch
-                onChange={(e) => setMode(mode === "light" ? "dark" : "light")}
+                checked={currentMode === "dark" ? true : false}
+                onChange={modeToggleHandle}
               />
             </ListItemButton>
           </ListItem>

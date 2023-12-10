@@ -4,10 +4,12 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { createUserFetch } from '../../redux/actions/userActions';
 import { displayError } from '../LoginCard/LoginCard';
+import { useNavigate } from 'react-router-dom';
 
 export const SignupCard = () => {
 
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -32,6 +34,7 @@ export const SignupCard = () => {
         setConfirmPasswordError("Passwords do not match");
       } else {
         dispatch(createUserFetch({ name, email, password }));
+        navigate('/');
       }
     };
 

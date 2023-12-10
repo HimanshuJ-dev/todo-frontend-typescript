@@ -25,7 +25,8 @@ export const displayError = (error: String) => {
 
 export const LoginCard = () => {
 
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -44,6 +45,7 @@ export const LoginCard = () => {
         setPasswordError("Password should be at least 6 characters long");
       } else {
         dispatch(getUsersFetch({ email, password }));
+        navigate("/");
       }
     };
 

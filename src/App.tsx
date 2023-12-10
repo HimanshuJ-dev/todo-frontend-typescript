@@ -16,26 +16,20 @@ import { EditAssignedTask } from './components/EditAssignedTask/EditAssignedTask
 import { Home } from './Views/Home/Home';
 import { Login } from './Views/Login/Login';
 import { Signup } from './Views/Signup/Signup';
-
-
-
-
-//imports from other files
-//imports from other files end
+import { useSelector } from 'react-redux';
+import { UserState } from './redux/reducers/userReducer';
 
 function App() {
 
-  const [mode, setMode] = useState("light");
+  const mode = useSelector((state: any) => state.user.darkmode);
 
-  const currentUser = "";
+  const currentUser = useSelector((state:any) => state.user.response?.userId);
 
   const darkTheme = createTheme({
     palette: {
       mode: mode as PaletteMode
     }
   })
-
-  //make a main feed and change its value and change other elements based on it
 
   return (
     <ThemeProvider theme={darkTheme}>
@@ -48,7 +42,7 @@ function App() {
         <Stack direction="row" spacing={2} justifyContent="space-between">
           {currentUser ? (
             <>
-              <Sidebar mode={mode} setMode={setMode} />
+              <Sidebar />
               <Box flex={4} p={{ xs: 0, md: 2 }}>
                 <Routes>
                   <Route index element={<YourTasks />} />

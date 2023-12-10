@@ -7,6 +7,7 @@ export type UserState = {
   readonly isLoggingIn: boolean;
   readonly errorUser: String | null;
   readonly isSigningOut: boolean;  
+  readonly darkmode: String;
 }
 
 const INITIAL_STATE = {
@@ -14,6 +15,7 @@ const INITIAL_STATE = {
   isLoggingIn: false,
   errorUser: null,
   isSigningOut: false,
+  darkmode: "light"
 };
 
 type actionType = {
@@ -82,7 +84,17 @@ export const userReducer = (state = INITIAL_STATE, action: actionType) => {
               response: null,
               errorUser: "500: Internal Server Error, Could not Create User",
             isLoggingIn: false,
-          };
+      };
+    case USER_TYPES.TURN_DARK_MODE_ON:
+      return {
+        ...state,
+        darkmode: "dark"
+      }
+    case USER_TYPES.TURN_LIGHT_MODE_ON:
+      return {
+        ...state,
+        darkmode: "light"
+      }
     default:
       return state;
   }

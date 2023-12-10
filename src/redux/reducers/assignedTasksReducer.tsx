@@ -1,11 +1,13 @@
 import { ASSIGNED_TASK_TYPES } from "../types/assignedTasksTypes";
 
-type assignedTasksResponseType = {
+export type assignedTasksResponseType = {
   title: String;
   description: String;
   priority: String;
   status: String;
   creator: String;
+  recieveremail: String;
+  creatoremail: String;
 };
 
 export type assignedTasksState = {
@@ -62,7 +64,7 @@ export const assignedTasksReducer = (
         case ASSIGNED_TASK_TYPES.ASSIGNED_TASKS_FAILED:
             return {
               ...state,
-              tasks: null,
+              tasks: [],
               errorTasks: "500: Internal server error, could not load tasks!",
               isTasksLoading: false,
               isTaskCreating: false,

@@ -10,24 +10,24 @@ type getAssignedTasksResponseType = {
   message?: String;
 };
 
-function* WorkAssignTaskFetch(payload: any) {
+function* workAssignTaskFetch({payload}: any) {
+    console.log("payload from saga:", payload)
     yield put({ type: ASSIGNED_TASK_TYPES.ASSIGN_TASK_LOADING });
-    const response: getAssignedTasksResponseType = yield call(() => assignTask({ ...payload }));
+    const response: getAssignedTasksResponseType = yield call(() => assignTask(payload));
     try {
-        const navigate = useNavigate()
         if (response.message !== "task created") {
             throw new Error("Could not assign task");
         }
         yield put({ type: ASSIGNED_TASK_TYPES.ASSIGN_TASK_SUCCESS });
-        navigate('/assigned-tasks');
     } catch (error) {
         yield put({ type: ASSIGNED_TASK_TYPES.ASSIGN_TASK_FAILED });
         swal("Some error occured\nCould not assign task");
     }
 }
 
-function* workAssignedTasksFetch(payload: any) {
-    const response: getAssignedTasksResponseType = yield call(() => assignedTasks({ ...payload }));
+function* workAssignedTasksFetch({payload}: any) {
+    console.log("payload from saga:", payload);
+    const response: getAssignedTasksResponseType = yield call(() => assignedTasks(payload));
     try {
         if (!response.tasks) {
             throw new Error("Could not load tasks");
@@ -77,25 +77,23 @@ function* workCancelAssignedTaskFetch(payload: any) {
     }
 }
 
-function* WorkEditAssignedTaskFetch(payload: any) {
+function* workEditAssignedTaskFetch(payload: any) {
     yield put({type: ASSIGNED_TASK_TYPES.ASSIGN_TASK_LOADING})
     const response: getAssignedTasksResponseType = yield call(() => editAssignedTask({ ...payload }))
     try {
-        const navigate = useNavigate();
         if (response.message !== "task updated") {
             throw new Error("Could not edit task");
         }
         yield put({ type: ASSIGNED_TASK_TYPES.ASSIGN_TASK_SUCCESS })
-        navigate('/assigned-tasks');
     } catch (error) {
         yield put({ type: ASSIGNED_TASK_TYPES.ASSIGN_TASK_FAILED })
         swal("Some error occured\nCould not edit task");
     }
 }
 
-function* workRecievedTasksFetch(payload: any) {
+function* workRecievedTasksFetch({payload}: any) {
     yield put({type: ASSIGNED_TASK_TYPES.RECIEVED_TASKS_LOADING})
-    const response: getAssignedTasksResponseType = yield call(() => recivedTasks({ ...payload }));
+    const response: getAssignedTasksResponseType = yield call(() => recivedTasks(payload));
     try {
         if (!response.tasks) {
             throw new Error("Could not load Tasks");
@@ -108,11 +106,11 @@ function* workRecievedTasksFetch(payload: any) {
 }
 
 function* assignedTasksSaga() {
-    yield takeEvery(ASSIGNED_TASK_TYPES.ASSIGN_TASK_FETCH, WorkAssignTaskFetch);
+    yield takeEvery(ASSIGNED_TASK_TYPES.ASSIGN_TASK_FETCH, workAssignTaskFetch);
     yield takeEvery(ASSIGNED_TASK_TYPES.ASSIGNED_TASKS_FETCH, workAssignedTasksFetch);
     yield takeEvery(ASSIGNED_TASK_TYPES.MARK_ASSIGNED_TASK_COMPLETED_FETCH, workCompleteAssignedTaskFetch);
     yield takeEvery(ASSIGNED_TASK_TYPES.MARK_ASSIGNED_TASK_CANCELLED_FETCH, workCancelAssignedTaskFetch);
-    yield takeEvery(ASSIGNED_TASK_TYPES.EDIT_ASSIGNED_TASK_FETCH, WorkEditAssignedTaskFetch);
+    yield takeEvery(ASSIGNED_TASK_TYPES.EDIT_ASSIGNED_TASK_FETCH, workEditAssignedTaskFetch);
     yield takeEvery(ASSIGNED_TASK_TYPES.RECIEVED_TASKS_FETCH, workRecievedTasksFetch);
 }
 

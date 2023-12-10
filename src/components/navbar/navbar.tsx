@@ -12,16 +12,28 @@ import {
 import { Icons, StyledToolbar, UserBox } from "./navbarStyled";
 import RuleFolderIcon from "@mui/icons-material/RuleFolder";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { UserState } from "../../redux/reducers/userReducer";
+import { signOutUser } from "../../redux/actions/userActions";
 
 const theme = createTheme();
 
 export const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const currentUser = "";
+  const currentUser = useSelector((state: any) => state.user.response?.userId);
 
-  const UserName = "Himanshu Jhajharia";
+  const UserName = useSelector((state: any) => state.user.response?.name);
+
+  const signOutHandler = () => {
+    console.log("sign out");
+    dispatch(signOutUser());
+    setOpen(false)
+    navigate("/");
+  };
 
   return (
     <AppBar position="sticky">
@@ -77,9 +89,7 @@ export const Navbar = () => {
           horizontal: "right",
         }}
       >
-        <MenuItem>Profile</MenuItem>
-        <MenuItem>My account</MenuItem>
-        <MenuItem>Logout</MenuItem>
+        <MenuItem onClick={signOutHandler}>Logout</MenuItem>
       </Menu>
     </AppBar>
   );

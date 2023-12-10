@@ -10,7 +10,7 @@ type getTasksResponseType = {
     message?: String
 }
 
-function* workGetTasksFetch(payload: any) {
+function* workGetTasksFetch({payload}: any) {
     yield put({ type: TASKS_TYPES.GET_TASKS_LOADING });
     const response: getTasksResponseType = yield call(() => getTasks(payload))
     try {
@@ -25,17 +25,17 @@ function* workGetTasksFetch(payload: any) {
     }
 }
 
-function* WorkCreateTaskFetch(payload: any) {
+function* workCreateTaskFetch({payload}: any) {
+    console.log("payload form saga", payload);
     yield put({ type: TASKS_TYPES.CREATE_TASK_LOADING });
-    const response: getTasksResponseType = yield call(() => createTask({ ...payload }))
+    const response: getTasksResponseType = yield call(() => createTask(payload))
+    console.log("response form saga", response);
     try {
-        const navigate = useNavigate();
         if (response.message !== "task created") {
             throw new Error("Could not create task");
         }
         yield put({ type: TASKS_TYPES.CREATE_TASK_SUCCESS });
         swal("task created");
-        navigate('/tasks');
     } catch (error) {
         yield put({ type: TASKS_TYPES.CREATE_TASK_FAILED });
         swal("Some error occured\nCould not create task");
@@ -55,17 +55,15 @@ function* workDeleteTaskFetch(payload: any) {
     }
 }
 
-function* WorkEditTaskFetch(payload: any) {
+function* workEditTaskFetch(payload: any) {
     yield put({ type: TASKS_TYPES.EDIT_TASK_LOADING });
     const response: getTasksResponseType = yield call(() => editTask({ ...payload }));
     try {
-        const navigate = useNavigate();
         if (response.message !== "task updated") {
             throw new Error("Could not update task");
         }
         swal("Task updated successfully");
         yield put({ type: TASKS_TYPES.EDIT_TASK_SUCCESS });
-        navigate('/tasks');
     } catch (error) {
         swal("Some Error Occured\nCould not update task");
         yield put({ type: TASKS_TYPES.EDIT_TASK_FAILED });
@@ -102,9 +100,9 @@ function* workCancelTaskFetch(payload: any) {
 
 function* tasksSaga() {
     yield takeEvery(TASKS_TYPES.GET_TASKS_FETCH, workGetTasksFetch);
-    yield takeEvery(TASKS_TYPES.CREATE_TASK_FETCH, WorkCreateTaskFetch);
+    yield takeEvery(TASKS_TYPES.CREATE_TASK_FETCH, workCreateTaskFetch);
     yield takeEvery(TASKS_TYPES.DELETE_TASK_FETCH, workDeleteTaskFetch);
-    yield takeEvery(TASKS_TYPES.EDIT_TASK_FETCH, WorkEditTaskFetch);
+    yield takeEvery(TASKS_TYPES.EDIT_TASK_FETCH, workEditTaskFetch);
     yield takeEvery(TASKS_TYPES.MARK_TASK_COMPLETED_FETCH, workCompleteTaskFetch);
     yield takeEvery(TASKS_TYPES.MARK_TASK_CANCELLED_FETCH, workCancelTaskFetch);
 }
