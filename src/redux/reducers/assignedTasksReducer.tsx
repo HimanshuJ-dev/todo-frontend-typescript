@@ -1,6 +1,7 @@
 import { ASSIGNED_TASK_TYPES } from "../types/assignedTasksTypes";
 
 export type assignedTasksResponseType = {
+  _id: String;
   title: String;
   description: String;
   priority: String;
@@ -11,32 +12,40 @@ export type assignedTasksResponseType = {
 };
 
 export type assignedTasksState = {
-  readonly tasks: assignedTasksResponseType | null;
+  readonly tasks: assignedTasksResponseType[];
   readonly isTasksLoading: boolean;
-  readonly errorTasks: String | null;
+  readonly errorTasks: String;
   readonly isCreatingTask: boolean;
 };
 
 export type recievedTasksState = {
-  readonly tasks: assignedTasksResponseType | null;
+  readonly tasks: assignedTasksResponseType[];
   readonly isTasksLoading: boolean;
-  readonly errorTasks: String | null;
+  readonly errorTasks: String;
   readonly isCreatingTask: boolean;
 };
 
 const INITIAL_TASKS_ASSIGNED = {
   tasks: [],
   isTasksLoading: false,
-  errorTasks: null,
+  errorTasks: "",
   isCreatingTask: false,
 };
 
 const INITIAL_TASKS_RECIEVED = {
   tasks: [],
   isTasksLoading: false,
-  errorTasks: null,
+  errorTasks: "",
   isCreatingTask: false,
 };
+
+export type assignedTasksRootState = {
+  assignedTasks : assignedTasksState;
+}
+
+export type receivedTasksRootState = {
+  recievedTasks: recievedTasksState
+}
 
 type actionType = {
   type: String;
@@ -52,7 +61,7 @@ export const assignedTasksReducer = (
             return {
                 ...state,
                 isTasksLoading: true,
-                errorTasks: null
+                errorTasks: ""
             }
         case ASSIGNED_TASK_TYPES.ASSIGNED_TASKS_SUCCESS:
             return {
@@ -72,13 +81,13 @@ export const assignedTasksReducer = (
         case ASSIGNED_TASK_TYPES.ASSIGN_TASK_LOADING:
             return {
               ...state,
-              errorTasks: null,
+              errorTasks: "",
               isCreatingTask: true,
             };
         case ASSIGNED_TASK_TYPES.ASSIGN_TASK_SUCCESS:
             return {
               ...state,
-              errorTasks: null,
+              errorTasks: "",
               isCreatingTask: false,
             };
         case ASSIGNED_TASK_TYPES.ASSIGN_TASK_FAILED:
@@ -98,7 +107,7 @@ export const recievedTasksReducer = (state = INITIAL_TASKS_RECIEVED, action: act
             return {
                 ...state,
                 isTasksLoading: true,
-                errorTasks: null
+                errorTasks: ""
             }
         case ASSIGNED_TASK_TYPES.RECIEVED_TASKS_SUCCESS:
             return {

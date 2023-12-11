@@ -14,8 +14,9 @@ import RuleFolderIcon from "@mui/icons-material/RuleFolder";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { UserState } from "../../redux/reducers/userReducer";
+import { UserState, userRootState } from "../../redux/reducers/userReducer";
 import { signOutUser } from "../../redux/actions/userActions";
+import PersonIcon from "@mui/icons-material/Person";
 
 const theme = createTheme();
 
@@ -24,9 +25,9 @@ export const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const currentUser = useSelector((state: any) => state.user.response?.userId);
+  const currentUser = useSelector((state: userRootState) => state.user.response?.userId);
 
-  const UserName = useSelector((state: any) => state.user.response?.name);
+  const UserName = useSelector((state: userRootState) => state.user.response?.name);
 
   const signOutHandler = () => {
     console.log("sign out");
@@ -40,7 +41,11 @@ export const Navbar = () => {
       <StyledToolbar>
         <Typography
           variant="h6"
-          sx={{ display: { xs: "none", sm: "block" }, textDecoration: "none", color: "white" }}
+          sx={{
+            display: { xs: "none", sm: "block" },
+            textDecoration: "none",
+            color: "white",
+          }}
           component={Link}
           to="/"
         >
@@ -50,18 +55,20 @@ export const Navbar = () => {
         {currentUser ? (
           <Box>
             <Icons theme={theme}>
-              <Avatar
+              {/* <Avatar
                 sx={{ width: "30", height: "30" }}
                 src="https://cdn.spinn.com/assets/img/img-user.jpeg"
                 onClick={(e) => setOpen(true)}
-              />
+              /> */}
+              <PersonIcon onClick={(e) => setOpen(true)} />
             </Icons>
             <UserBox theme={theme} onClick={(e) => setOpen(true)}>
               <Typography>{UserName}</Typography>
-              <Avatar
+              {/* <Avatar
                 sx={{ width: "30", height: "30" }}
                 src="https://cdn.spinn.com/assets/img/img-user.jpeg"
-              />
+              /> */}
+              <PersonIcon />
             </UserBox>
           </Box>
         ) : (

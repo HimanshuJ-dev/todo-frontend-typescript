@@ -17,13 +17,16 @@ import { Home } from './Views/Home/Home';
 import { Login } from './Views/Login/Login';
 import { Signup } from './Views/Signup/Signup';
 import { useSelector } from 'react-redux';
-import { UserState } from './redux/reducers/userReducer';
+import { UserState, userRootState } from './redux/reducers/userReducer';
+import { Spinner } from './components/Spinner/Spinner';
 
 function App() {
 
-  const mode = useSelector((state: any) => state.user.darkmode);
+  const mode = useSelector((state: userRootState) => state.user.darkmode);
 
-  const currentUser = useSelector((state:any) => state.user.response?.userId);
+  const currentUser = useSelector((state: userRootState) => state.user.response?.userId);
+  
+  const isUserLoading = useSelector((state: userRootState) => state.user.isLoggingIn)
 
   const darkTheme = createTheme({
     palette: {
@@ -40,7 +43,7 @@ function App() {
       >
         <Navbar />
         <Stack direction="row" spacing={2} justifyContent="space-between">
-          {currentUser ? (
+          {isUserLoading ? (<Spinner />) : currentUser ? (
             <>
               <Sidebar />
               <Box flex={4} p={{ xs: 0, md: 2 }}>

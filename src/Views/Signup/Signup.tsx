@@ -1,5 +1,5 @@
 import React from 'react';
-import LoginBackgroundImage from '../../images/LoginBackground/LoginBackgroundImage.jpg'
+import LoginBackgroundImage from '../../images/LoginBackground/LoginBackgroundImage.png'
 import { Box } from '@mui/material';
 import { LoginCard } from '../../components/LoginCard/LoginCard';
 import { SignupCard } from '../../components/SignupCard/SignupCard';

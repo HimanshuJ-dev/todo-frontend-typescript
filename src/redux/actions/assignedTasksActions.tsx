@@ -26,6 +26,11 @@ export const markAssignedTaskCancelledFetch = (taskId: String, currentUser: Stri
     payload: {taskId, currentUser}
 })
 
+export const deleteAssignedTaskFetch = (taskId: String, currentUser: String) => ({
+  type: ASSIGNED_TASK_TYPES.DELETE_ASSIGNED_TASK_FETCH,
+  payload: { taskId, currentUser },
+});
+
 export const editAssignedTaskFetch = (
     _id: String,
     recieverEmail: String,

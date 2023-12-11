@@ -2,8 +2,8 @@ import { call, put, takeEvery } from "redux-saga/effects";
 import { USER_TYPES } from "../types/userTypes";
 
 import { getUser, createUser } from "../service/userService";
-import { payloadType } from "../actions/userActions";
 import { useNavigate } from "react-router-dom";
+import { userPayloadType } from "../actions/userActions";
 
 type responseType = {
     token: Number
@@ -13,21 +13,20 @@ type responseType = {
 
 //generator function to login user
 // payload type has to be solved to be more specific
-function* workGetUsersFetch({payload}:any) {
-    yield put({ type: USER_TYPES.GET_USERS_LOADING });
-    const response: responseType = yield call(() => getUser(payload))
-    try {
-        if (!response.userId) {
-            throw new Error("User Not Found");
-        }
-        yield put({
-            type: USER_TYPES.GET_USERS_SUCCESS,
-            response,
-        })
+function* workGetUsersFetch({ payload }: { type: string; payload: userPayloadType }) {
+  yield put({ type: USER_TYPES.GET_USERS_LOADING });
+  const response: responseType = yield call(() => getUser(payload));
+  try {
+    if (!response.userId) {
+      throw new Error("User Not Found");
     }
-    catch (error) {
-        yield put({type: USER_TYPES.GET_USERS_FAILED})
-    }
+    yield put({
+      type: USER_TYPES.GET_USERS_SUCCESS,
+      response,
+    });
+  } catch (error) {
+    yield put({ type: USER_TYPES.GET_USERS_FAILED });
+  }
 }
 
 //generator function to create new user

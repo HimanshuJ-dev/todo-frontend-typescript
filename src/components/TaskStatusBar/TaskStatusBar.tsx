@@ -7,6 +7,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { FC, Fragment, ReactElement } from 'react';
 import { useSelector } from 'react-redux';
 import { tasksResponseType } from '../../redux/reducers/tasksReducer';
+import { assignedTasksResponseType, assignedTasksRootState, receivedTasksRootState } from '../../redux/reducers/assignedTasksReducer';
 
 type CustomListItemProps = {
   primaryText: string;
@@ -32,9 +33,9 @@ const CustomListItem: FC<CustomListItemProps> = ({
 
 export const TaskStatusBar = () => {
   const tasks = useSelector((state: any) => state.tasks.tasks);
-  const ReceivedTasks = useSelector((state: any) => state.recievedTasks.tasks);
+  const ReceivedTasks = useSelector((state: receivedTasksRootState) => state.recievedTasks.tasks);
   const totalTasksAssigned = useSelector(
-    (state: any) => state.assignedTasks.tasks
+    (state: assignedTasksRootState) => state.assignedTasks.tasks
   ).length;
 
   const totalTasks = tasks.length;
@@ -64,28 +65,28 @@ export const TaskStatusBar = () => {
     (task: tasksResponseType) => task.status === "Cancelled"
   ).length;
   const completedReceivedTasksNumber = ReceivedTasks.filter(
-    (task: tasksResponseType) => task.status === "Completed"
+    (task: assignedTasksResponseType) => task.status === "Completed"
   ).length;
   const urgestReceivedTasksNumber = ReceivedTasks.filter(
-    (task: tasksResponseType) =>
+    (task: assignedTasksResponseType) =>
       task.priority === "Urgent" &&
       task.status !== "Completed" &&
       task.status !== "Cancelled"
   ).length;
   const highPriorityReceivedTasksNumber = ReceivedTasks.filter(
-    (task: tasksResponseType) =>
+    (task: assignedTasksResponseType) =>
       task.priority === "High" &&
       task.status !== "Completed" &&
       task.status !== "Cancelled"
   ).length;
   const normalReceivedTasksNumber = ReceivedTasks.filter(
-    (task: tasksResponseType) =>
+    (task: assignedTasksResponseType) =>
       task.priority === "Normal" &&
       task.status !== "Completed" &&
       task.status !== "Cancelled"
   ).length;
   const cancelledReceivedTasksNumber = ReceivedTasks.filter(
-    (task: tasksResponseType) => task.status === "Cancelled"
+    (task: assignedTasksResponseType) => task.status === "Cancelled"
   ).length;
 
   return (

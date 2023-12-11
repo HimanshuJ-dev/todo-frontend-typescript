@@ -11,12 +11,18 @@ export type tasksResponseType = {
     updatedAt: Date
 }
 
+
+
 export type tasksState = {
-    readonly tasks: tasksResponseType[] | null,
+    readonly tasks: tasksResponseType[],
     readonly isTasksLoading: boolean,
-    readonly errorTasks: String | null,
+    readonly errorTasks: String,
     readonly isCreatingTask: boolean
 }
+
+export type tasksRootState = {
+  tasks: tasksState;
+};
 
 const INITIAL_TASKS = {
     tasks: [],
@@ -36,7 +42,7 @@ export const tasksReducer = (state = INITIAL_TASKS, action: actionType) => {
         return {
           ...state,
           isTasksLoading: true,
-          errorTasks: null,
+          errorTasks: "",
         };
       case TASKS_TYPES.GET_TASKS_SUCCESS:
         return {
@@ -56,13 +62,13 @@ export const tasksReducer = (state = INITIAL_TASKS, action: actionType) => {
       case TASKS_TYPES.CREATE_TASK_LOADING:
         return {
           ...state,
-          errorTasks: null,
+          errorTasks: "",
           isCreatingTask: true,
         };
       case TASKS_TYPES.CREATE_TASK_SUCCESS:
         return {
           ...state,
-          errorTasks: null,
+          errorTasks: "",
           isCreatingTask: false,
         };
       case TASKS_TYPES.CREATE_TASK_FAILED:
@@ -74,13 +80,13 @@ export const tasksReducer = (state = INITIAL_TASKS, action: actionType) => {
       case TASKS_TYPES.EDIT_TASK_LOADING:
         return {
           ...state,
-          errorTasks: null,
+          errorTasks: "",
           isCreatingTask: true,
         };
       case TASKS_TYPES.EDIT_TASK_SUCCESS:
         return {
           ...state,
-          errorTasks: null,
+          errorTasks: "",
           isCreatingTask: false,
         };
       case TASKS_TYPES.EDIT_TASK_FAILED:

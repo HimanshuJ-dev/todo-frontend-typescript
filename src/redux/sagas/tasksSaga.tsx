@@ -10,7 +10,8 @@ type getTasksResponseType = {
     message?: String
 }
 
-function* workGetTasksFetch({payload}: any) {
+function* workGetTasksFetch({ payload }: any) {
+    console.log("payload from saga:", payload);
     yield put({ type: TASKS_TYPES.GET_TASKS_LOADING });
     const response: getTasksResponseType = yield call(() => getTasks(payload))
     try {
@@ -42,22 +43,23 @@ function* workCreateTaskFetch({payload}: any) {
     }
 }
 
-function* workDeleteTaskFetch(payload: any) {
-    const response: getTasksResponseType = yield call(() => deleteTask({ ...payload }));
+function* workDeleteTaskFetch({payload}: any) {
+    console.log("payload from saga:", payload);
+    const response: getTasksResponseType = yield call(() => deleteTask(payload));
     try {
         if (response.message !== "task deleted") {
             throw new Error("Could not delete task");
         }
         swal('Task Deleted Successfully');
-        yield put({ type: TASKS_TYPES.GET_TASKS_FETCH, payload: {...payload} });
+        yield put({ type: TASKS_TYPES.GET_TASKS_FETCH, payload: payload.currentUser});
     } catch (error) {
         swal("Some Error Occured\nCould not delete task");
     }
 }
 
-function* workEditTaskFetch(payload: any) {
+function* workEditTaskFetch({payload}: any) {
     yield put({ type: TASKS_TYPES.EDIT_TASK_LOADING });
-    const response: getTasksResponseType = yield call(() => editTask({ ...payload }));
+    const response: getTasksResponseType = yield call(() => editTask(payload));
     try {
         if (response.message !== "task updated") {
             throw new Error("Could not update task");
@@ -70,29 +72,29 @@ function* workEditTaskFetch(payload: any) {
     }
 }
 
-function* workCompleteTaskFetch(payload: any) {
-    const response: getTasksResponseType = yield call(() => completeTask({ ...payload }));
+function* workCompleteTaskFetch({payload}: any) {
+    const response: getTasksResponseType = yield call(() => completeTask(payload));
     try {
         if (response.message !== "task updated") {
             throw new Error("Could not update task");
         }
         swal('Task updated successfully');
-        yield put({ type: TASKS_TYPES.GET_TASKS_FETCH, payload: {...payload} });
+        yield put({ type: TASKS_TYPES.GET_TASKS_FETCH, payload: payload.currentUser });
     } catch (error) {
         swal("Some Error Occured\nCould not updated Task");
     }
 }
 
-function* workCancelTaskFetch(payload: any) {
+function* workCancelTaskFetch({payload}: any) {
   const response: getTasksResponseType = yield call(() =>
-    cancelTask({ ...payload })
+    cancelTask(payload)
   );
   try {
     if (response.message !== "task updated") {
       throw new Error("Could not update task");
     }
     swal("Task updated successfully");
-    yield put({ type: TASKS_TYPES.GET_TASKS_FETCH, payload: { ...payload } });
+    yield put({ type: TASKS_TYPES.GET_TASKS_FETCH, payload: payload.currentUser });
   } catch (error) {
     swal("Some Error Occured\nCould not updated Task");
   }

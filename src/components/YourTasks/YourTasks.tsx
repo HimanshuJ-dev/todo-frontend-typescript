@@ -1,28 +1,31 @@
 import { Delete } from '@mui/icons-material';
-import { Box, Button, Card, CardActions, CardContent, Grid, IconButton, Typography } from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, Grid, IconButton, Skeleton, Typography } from '@mui/material';
 import React, { Fragment, useEffect, useState } from 'react';
 import DoneIcon from "@mui/icons-material/Done";
 import ClearIcon from "@mui/icons-material/Clear";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { useDispatch,useSelector } from 'react-redux';
 import { deleteTaskFetch, getTasksFetch, markTaskCancelledFetch, markTaskCompletedFetch } from '../../redux/actions/tasksActions';
-import { UserState } from '../../redux/reducers/userReducer';
-import { tasksResponseType, tasksState } from '../../redux/reducers/tasksReducer';
+import { UserState, userRootState } from '../../redux/reducers/userReducer';
+import { tasksResponseType, tasksRootState, tasksState } from '../../redux/reducers/tasksReducer';
 import { assignedTasksFetch, recievedTasksFetch } from '../../redux/actions/assignedTasksActions';
+import { Link } from 'react-router-dom';
 
 export const YourTasks = () => {
 
 
   const dispatch = useDispatch();
   // const currentUser = useSelector((state: UserState) => state.response?.userId);
-  const currentUser = useSelector((state: any) => state.user.response?.userId);
+  const currentUser = useSelector((state: userRootState) => state.user.response?.userId);
+
+  const isTasksLoading = useSelector((state: tasksRootState) => state.tasks.isTasksLoading);
   
-  const tasks = useSelector((state: any) => state.tasks.tasks);
+  const tasks = useSelector((state: tasksRootState) => state.tasks.tasks);
 
   useEffect(() => {
     dispatch(getTasksFetch(currentUser!));
-    dispatch(assignedTasksFetch(currentUser));
-    dispatch(recievedTasksFetch(currentUser));
+    dispatch(assignedTasksFetch(currentUser as String));
+    dispatch(recievedTasksFetch(currentUser as String));
   }, []);
 
   const DeleteTask = (taskId: String, currentUser: String) => {
@@ -84,26 +87,43 @@ export const YourTasks = () => {
         </CardContent>
         <Grid container justifyContent="space-between">
           <CardActions>
-            <IconButton aria-label="Mark as Completed">
-              <BorderColorIcon />
-            </IconButton>
+            {task.status === "Pending" && (
+              <Link
+                to={{
+                  pathname: "/edit-task",
+                }}
+                state={task}
+              >
+                <IconButton aria-label="Mark as Completed">
+                  <BorderColorIcon />
+                </IconButton>
+              </Link>
+            )}
           </CardActions>
           <CardActions>
-            <IconButton
-              aria-label="Mark as Completed"
-              onClick={() => markTaskAsCompeleted(task._id, currentUser)}
-            >
-              <DoneIcon />
-            </IconButton>
-            <IconButton
-              aria-label="Mark as Cancelled"
-              onClick={() => markTaskAsCancelled(task._id, currentUser)}
-            >
-              <ClearIcon />
-            </IconButton>
+            {task.status === "Pending" && (
+              <IconButton
+                aria-label="Mark as Completed"
+                onClick={() =>
+                  markTaskAsCompeleted(task._id, currentUser as String)
+                }
+              >
+                <DoneIcon />
+              </IconButton>
+            )}
+            {task.status === "Pending" && (
+              <IconButton
+                aria-label="Mark as Cancelled"
+                onClick={() =>
+                  markTaskAsCancelled(task._id, currentUser as String)
+                }
+              >
+                <ClearIcon />
+              </IconButton>
+            )}
             <IconButton
               aria-label="Delete"
-              onClick={() => DeleteTask(task._id, currentUser)}
+              onClick={() => DeleteTask(task._id, currentUser as String)}
             >
               <Delete />
             </IconButton>
@@ -115,10 +135,33 @@ export const YourTasks = () => {
 
   return (
     <Box>
-      <Typography width="100%" variant="h5" textAlign="center">
+      <Typography width="100%" variant="h5" textAlign="center" mb="20px">
         Your Tasks
       </Typography>
-      {SingleTaskCard}
+      {isTasksLoading ? (
+        <Fragment>
+          <Skeleton
+            variant="rectangular"
+            width="100%"
+            height={200}
+            sx={{ mb: "20px" }}
+          />
+          <Skeleton
+            variant="rectangular"
+            width="100%"
+            height={200}
+            sx={{ mb: "20px" }}
+          />
+          <Skeleton
+            variant="rectangular"
+            width="100%"
+            height={200}
+            sx={{ mb: "20px" }}
+          />
+        </Fragment>
+      ) : (
+        SingleTaskCard
+      )}
     </Box>
   );
 }

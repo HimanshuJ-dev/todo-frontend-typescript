@@ -45,26 +45,33 @@ export function cancelAssignedTask({ taskId }: { taskId: String }) {
       .catch((err) => console.log("error occured:", err));
 }
 
+export function deleteAssignedTask({ taskId }: { taskId: String }) {
+  return axios
+    .delete(`http://localhost:8080/delete-assigned-task/?id=${taskId}`)
+    .then((res) => res.data)
+    .catch((err) => console.log("error occured:", err));
+}
+
 export function editAssignedTask({
     _id,
     recieverEmail,
-    taskName,
+    taskname,
     description,
     priority,
     currentUser
 }: {
         _id: String,
         recieverEmail: String,
-        taskName: String,
+        taskname: String,
         description: String,
         priority: String,
         currentUser: String
-    }) {
+  }) {
     return axios
       .put(`http://localhost:8080/updated-assigned-task`, {
         id: _id,
         reciever: recieverEmail,
-        title: taskName,
+        title: taskname,
         description: description,
         priority: priority,
         creator: currentUser,

@@ -18,10 +18,11 @@ import NightlightIcon from "@mui/icons-material/Nightlight";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { turnOnDarkMode, turnOnLightMode } from "../../redux/actions/userActions";
+import { userRootState } from "../../redux/reducers/userReducer";
 
 export const Sidebar: React.FC = () => {
 
-  const currentMode = useSelector((state: any) => state.user.darkmode)
+  const currentMode = useSelector((state: userRootState) => state.user.darkmode)
 
   const dispatch = useDispatch();
 

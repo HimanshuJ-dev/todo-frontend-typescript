@@ -1,5 +1,5 @@
-import { Box, Card, CardActions, CardContent, Grid, IconButton, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Box, Card, CardActions, CardContent, Grid, IconButton, Skeleton, Typography } from '@mui/material';
+import React, { Fragment, useEffect, useState } from 'react';
 import DoneIcon from "@mui/icons-material/Done";
 import ClearIcon from "@mui/icons-material/Clear";
 import { Delete } from "@mui/icons-material";
@@ -7,21 +7,18 @@ import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { useDispatch, useSelector } from 'react-redux';
 import { assignedTasksFetch, markAssignedTaskCancelledFetch, markAssignedTaskCompletedFetch, recievedTasksFetch } from '../../redux/actions/assignedTasksActions';
 import { deleteTaskFetch } from '../../redux/actions/tasksActions';
-import { assignedTasksResponseType } from '../../redux/reducers/assignedTasksReducer';
+import { assignedTasksResponseType, receivedTasksRootState } from '../../redux/reducers/assignedTasksReducer';
+import { userRootState } from '../../redux/reducers/userReducer';
 
 export const ReceivedTasks = () => {
   const dispatch = useDispatch();
-  const currentUser = useSelector((state: any) => state.user.response?.userId);
-  const tasks = useSelector((state: any) => state.recievedTasks.tasks);
+  const currentUser = useSelector((state: userRootState) => state.user.response?.userId);
+  const tasks = useSelector((state: receivedTasksRootState) => state.recievedTasks.tasks);
+  const isReceivedTasksLoading = useSelector((state: receivedTasksRootState) => state.recievedTasks.isTasksLoading);
 
   useEffect(() => {
-    dispatch(recievedTasksFetch(currentUser));
+    dispatch(recievedTasksFetch(currentUser as String));
   }, []);
-
-  const DeleteTask = (taskId: String, currentUser: String) => {
-    // console.log("currentUser from list:", currentUser);
-    dispatch(deleteTaskFetch(taskId, currentUser));
-  };
 
   const markTaskAsCompeleted = (taskId: String, currentUser: String) => {
     dispatch(markAssignedTaskCompletedFetch(taskId, currentUser));
@@ -79,22 +76,20 @@ export const ReceivedTasks = () => {
             <b>Task Description:</b> {task.description}
           </Typography>
         </CardContent>
-        <Grid container justifyContent="space-between">
-          <CardActions>
-            <IconButton aria-label="Mark as Completed">
-              <BorderColorIcon />
-            </IconButton>
-          </CardActions>
-          <CardActions>
-            <IconButton aria-label="Mark as Completed">
+        <Grid container justifyContent="space-between" width="100%">
+          <CardActions sx={{ width: "100%", alignItems: "end" }}>
+            {task.status === "Pending" && <IconButton
+              onClick={() => markTaskAsCompeleted(task._id, currentUser as String)}
+              aria-label="Mark as Completed"
+            >
               <DoneIcon />
-            </IconButton>
-            <IconButton aria-label="Mark as Cancelled">
+            </IconButton>}
+            {task.status === "Pending" && <IconButton
+              onClick={() => markTaskAsCancelled(task._id, currentUser as String)}
+              aria-label="Mark as Cancelled"
+            >
               <ClearIcon />
-            </IconButton>
-            <IconButton aria-label="Delete">
-              <Delete />
-            </IconButton>
+            </IconButton>}
           </CardActions>
         </Grid>
       </Card>
@@ -103,10 +98,33 @@ export const ReceivedTasks = () => {
 
   return (
     <Box>
-      <Typography width="100%" variant="h5" textAlign="center">
-        Assigned Tasks
+      <Typography width="100%" variant="h5" textAlign="center" mb="20px">
+        Received Tasks
       </Typography>
-      {singleAssignedTaskCard}
+      {isReceivedTasksLoading ? (
+        <Fragment>
+          <Skeleton
+            variant="rectangular"
+            width="100%"
+            height={200}
+            sx={{ mb: "20px" }}
+          />
+          <Skeleton
+            variant="rectangular"
+            width="100%"
+            height={200}
+            sx={{ mb: "20px" }}
+          />
+          <Skeleton
+            variant="rectangular"
+            width="100%"
+            height={200}
+            sx={{ mb: "20px" }}
+          />
+        </Fragment>
+      ) : (
+        singleAssignedTaskCard
+      )}
     </Box>
   );
 }

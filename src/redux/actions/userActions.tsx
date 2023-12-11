@@ -1,17 +1,17 @@
 import { USER_TYPES } from "../types/userTypes"
 
-export type payloadType = {
+export type userPayloadType = {
     name?: String,
     email: String,
     password: String
 }
 
-export const getUsersFetch = (payload: payloadType) => ({
+export const getUsersFetch = (payload: userPayloadType) => ({
     type: USER_TYPES.GET_USERS_FETCH,
     payload: {...payload}
 });
 
-export const createUserFetch = (payload: payloadType) => ({
+export const createUserFetch = (payload: userPayloadType) => ({
     type: USER_TYPES.CREATE_USER_FETCH,
     payload: {...payload}
 });

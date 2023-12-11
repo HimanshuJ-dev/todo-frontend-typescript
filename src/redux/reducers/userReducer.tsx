@@ -2,6 +2,8 @@ import { USER_TYPES } from "../types/userTypes";
 
 type userResponseType = { token: String; userId: String; name: String };
 
+
+
 export type UserState = {
   readonly response: userResponseType | null;
   readonly isLoggingIn: boolean;
@@ -9,6 +11,10 @@ export type UserState = {
   readonly isSigningOut: boolean;  
   readonly darkmode: String;
 }
+
+export type userRootState = {
+  user: UserState;
+};
 
 const INITIAL_STATE = {
   response: null,

@@ -15,13 +15,14 @@ import { useState } from 'react';
 import { createTasksFetch } from '../../redux/actions/tasksActions';
 import { assignTaskFetch } from '../../redux/actions/assignedTasksActions';
 import { displayError } from '../LoginCard/LoginCard';
+import { userRootState } from '../../redux/reducers/userReducer';
 
 export const AssignTask = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const currentUser = useSelector((state: any) => state.user.response?.userId);
+  const currentUser = useSelector((state: userRootState) => state.user.response?.userId);
 
   const [recieverEmail, setRecieverEmail] = useState("");
   const [taskName, setTaskName] = useState("");
@@ -42,7 +43,7 @@ export const AssignTask = () => {
     } else if (
       priority !== "Normal" &&
       priority !== "High" &&
-      priority !== "UVrgent"
+      priority !== "Urgent"
     ) {
       console.log(priority);
       setPriorityError("Please set a priority");
@@ -56,7 +57,7 @@ export const AssignTask = () => {
           taskName,
           description,
           priority,
-          currentUser
+          currentUser as String
         )
       );
     }

@@ -1,7 +1,7 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import swal from "sweetalert";
 import { ASSIGNED_TASK_TYPES } from "../types/assignedTasksTypes";
-import { assignTask, assignedTasks, cancelAssignedTask, completeAssignedTask, editAssignedTask, recivedTasks } from "../service/assignedTasksService";
+import { assignTask, assignedTasks, cancelAssignedTask, completeAssignedTask, deleteAssignedTask, editAssignedTask, recivedTasks } from "../service/assignedTasksService";
 import { useNavigate } from "react-router-dom";
 import { tasksResponseType } from "../reducers/tasksReducer";
 
@@ -11,7 +11,6 @@ type getAssignedTasksResponseType = {
 };
 
 function* workAssignTaskFetch({payload}: any) {
-    console.log("payload from saga:", payload)
     yield put({ type: ASSIGNED_TASK_TYPES.ASSIGN_TASK_LOADING });
     const response: getAssignedTasksResponseType = yield call(() => assignTask(payload));
     try {
@@ -19,6 +18,7 @@ function* workAssignTaskFetch({payload}: any) {
             throw new Error("Could not assign task");
         }
         yield put({ type: ASSIGNED_TASK_TYPES.ASSIGN_TASK_SUCCESS });
+        swal("Task assigned successfully!");
     } catch (error) {
         yield put({ type: ASSIGNED_TASK_TYPES.ASSIGN_TASK_FAILED });
         swal("Some error occured\nCould not assign task");
@@ -26,7 +26,7 @@ function* workAssignTaskFetch({payload}: any) {
 }
 
 function* workAssignedTasksFetch({payload}: any) {
-    console.log("payload from saga:", payload);
+  yield put({ type: ASSIGNED_TASK_TYPES.ASSIGNED_TASKS_LOADING });
     const response: getAssignedTasksResponseType = yield call(() => assignedTasks(payload));
     try {
         if (!response.tasks) {
@@ -39,7 +39,7 @@ function* workAssignedTasksFetch({payload}: any) {
     }
 }
 
-function* workCompleteAssignedTaskFetch(payload: any) {
+function* workCompleteAssignedTaskFetch({payload}: any) {
     const response: getAssignedTasksResponseType = yield call(() => completeAssignedTask(payload));
     try {
         if (response.message !== "task updated") {
@@ -54,7 +54,7 @@ function* workCompleteAssignedTaskFetch(payload: any) {
     }
 }
 
-function* workCancelAssignedTaskFetch(payload: any) {
+function* workCancelAssignedTaskFetch({payload}: any) {
     const response: getAssignedTasksResponseType = yield call(() =>
       cancelAssignedTask(payload)
     );
@@ -77,14 +77,39 @@ function* workCancelAssignedTaskFetch(payload: any) {
     }
 }
 
-function* workEditAssignedTaskFetch(payload: any) {
+function* workDeleteAssignedTaskFetch({ payload }: any) {
+  
+  const response: getAssignedTasksResponseType = yield call(() =>
+    deleteAssignedTask(payload)
+  );
+  try {
+    if (response.message !== "task deleted") {
+      throw new Error("Could not delete task");
+    }
+    swal("Task Deleted Successfully");
+    yield put({
+      type: ASSIGNED_TASK_TYPES.ASSIGNED_TASKS_FETCH,
+      payload: payload,
+    });
+    yield put({
+      type: ASSIGNED_TASK_TYPES.RECIEVED_TASKS_FETCH,
+      payload: payload,
+    });
+  } catch (error) {
+    swal("Some Error Occured\nCould not delete task");
+  }
+}
+
+function* workEditAssignedTaskFetch({ payload }: any) {
+    console.log("payload from saga:", payload);
     yield put({type: ASSIGNED_TASK_TYPES.ASSIGN_TASK_LOADING})
-    const response: getAssignedTasksResponseType = yield call(() => editAssignedTask({ ...payload }))
+    const response: getAssignedTasksResponseType = yield call(() => editAssignedTask(payload))
     try {
         if (response.message !== "task updated") {
             throw new Error("Could not edit task");
         }
         yield put({ type: ASSIGNED_TASK_TYPES.ASSIGN_TASK_SUCCESS })
+        swal("Assignment Updated Successfully");
     } catch (error) {
         yield put({ type: ASSIGNED_TASK_TYPES.ASSIGN_TASK_FAILED })
         swal("Some error occured\nCould not edit task");
@@ -112,6 +137,7 @@ function* assignedTasksSaga() {
     yield takeEvery(ASSIGNED_TASK_TYPES.MARK_ASSIGNED_TASK_CANCELLED_FETCH, workCancelAssignedTaskFetch);
     yield takeEvery(ASSIGNED_TASK_TYPES.EDIT_ASSIGNED_TASK_FETCH, workEditAssignedTaskFetch);
     yield takeEvery(ASSIGNED_TASK_TYPES.RECIEVED_TASKS_FETCH, workRecievedTasksFetch);
+    yield takeEvery(ASSIGNED_TASK_TYPES.DELETE_ASSIGNED_TASK_FETCH, workDeleteAssignedTaskFetch);
 }
 
 export default assignedTasksSaga;

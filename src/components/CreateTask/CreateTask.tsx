@@ -6,13 +6,14 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { displayError } from '../LoginCard/LoginCard';
+import { userRootState } from '../../redux/reducers/userReducer';
 
 export const CreateTask = () => {
   
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const currentUser = useSelector((state: any) => state.user.response?.userId);
+  const currentUser = useSelector((state: userRootState) => state.user.response?.userId);
 
   const [taskName, setTaskName] = useState("");
   const [description, setDescription] = useState("");
@@ -37,7 +38,7 @@ export const CreateTask = () => {
       setDescriptionError("Please Enter a description");
     } else {
       // Fetch the user data from an API.
-      dispatch(createTasksFetch(taskName, description, priority, currentUser));
+      dispatch(createTasksFetch(taskName, description, priority, currentUser as String));
     }
   };
 

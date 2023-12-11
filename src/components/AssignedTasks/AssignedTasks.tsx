@@ -1,27 +1,28 @@
-import { Box, Card, CardActions, CardContent, Grid, IconButton, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Box, Card, CardActions, CardContent, Grid, IconButton, Skeleton, Typography } from '@mui/material';
+import React, { Fragment, useEffect, useState } from 'react';
 import DoneIcon from "@mui/icons-material/Done";
 import ClearIcon from "@mui/icons-material/Clear";
 import { Delete } from "@mui/icons-material";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { useDispatch, useSelector } from 'react-redux';
-import { assignedTasksFetch, markAssignedTaskCancelledFetch, markAssignedTaskCompletedFetch } from '../../redux/actions/assignedTasksActions';
-import { deleteTaskFetch } from '../../redux/actions/tasksActions';
-import { assignedTasksResponseType } from '../../redux/reducers/assignedTasksReducer';
+import { assignedTasksFetch, deleteAssignedTaskFetch, markAssignedTaskCancelledFetch, markAssignedTaskCompletedFetch } from '../../redux/actions/assignedTasksActions';
+import { assignedTasksResponseType, assignedTasksRootState } from '../../redux/reducers/assignedTasksReducer';
+import { Link } from 'react-router-dom';
+import { userRootState } from '../../redux/reducers/userReducer';
 
 export const AssignedTasks = () => {
 
   const dispatch = useDispatch();
-  const currentUser = useSelector((state: any) => state.user.response?.userId);
-  const tasks = useSelector((state: any) => state.assignedTasks.tasks);
+  const currentUser = useSelector((state: userRootState) => state.user.response?.userId);
+  const tasks = useSelector((state: assignedTasksRootState) => state.assignedTasks.tasks);
+  const isAssignedTasksLoading = useSelector((state: assignedTasksRootState) => state.assignedTasks.isTasksLoading);
 
   useEffect(() => {
-    dispatch(assignedTasksFetch(currentUser));
+    dispatch(assignedTasksFetch(currentUser as String));
   }, []);
 
   const DeleteTask = (taskId: String, currentUser: String) => {
-    // console.log("currentUser from list:", currentUser);
-    dispatch(deleteTaskFetch(taskId, currentUser));
+    dispatch(deleteAssignedTaskFetch(taskId, currentUser));
   };
 
   const markTaskAsCompeleted = (taskId: String, currentUser: String) => {
@@ -69,7 +70,9 @@ export const AssignedTasks = () => {
           ) : (
             <Typography sx={{ mb: 1.5 }}>
               <b>Status:</b>{" "}
-              <span style={{ color: statusColor(task.status) }}>{task.status}</span>
+              <span style={{ color: statusColor(task.status) }}>
+                {task.status}
+              </span>
             </Typography>
           )}
           <Typography variant="body1">
@@ -78,18 +81,44 @@ export const AssignedTasks = () => {
         </CardContent>
         <Grid container justifyContent="space-between">
           <CardActions>
-            <IconButton aria-label="Mark as Completed">
-              <BorderColorIcon />
-            </IconButton>
+            {task.status === "Pending" && (
+              <Link
+                to={{
+                  pathname: "/edit-assigned-task",
+                }}
+                state={task}
+              >
+                <IconButton aria-label="Mark as Completed">
+                  <BorderColorIcon />
+                </IconButton>
+              </Link>
+            )}
           </CardActions>
           <CardActions>
-            <IconButton aria-label="Mark as Completed">
-              <DoneIcon />
-            </IconButton>
-            <IconButton aria-label="Mark as Cancelled">
-              <ClearIcon />
-            </IconButton>
-            <IconButton aria-label="Delete">
+            {task.status === "Pending" && (
+              <IconButton
+                onClick={() =>
+                  markTaskAsCompeleted(task._id, currentUser as String)
+                }
+                aria-label="Mark as Completed"
+              >
+                <DoneIcon />
+              </IconButton>
+            )}
+            {task.status === "Pending" && (
+              <IconButton
+                onClick={() =>
+                  markTaskAsCancelled(task._id, currentUser as String)
+                }
+                aria-label="Mark as Cancelled"
+              >
+                <ClearIcon />
+              </IconButton>
+            )}
+            <IconButton
+              onClick={() => DeleteTask(task._id, currentUser as String)}
+              aria-label="Delete"
+            >
               <Delete />
             </IconButton>
           </CardActions>
@@ -100,10 +129,33 @@ export const AssignedTasks = () => {
     
   return (
     <Box>
-      <Typography width="100%" variant="h5" textAlign="center">
+      <Typography width="100%" variant="h5" textAlign="center" mb="20px">
         Assigned Tasks
       </Typography>
-      {singleAssignedTaskCard}
+      {isAssignedTasksLoading ? (
+        <Fragment>
+          <Skeleton
+            variant="rectangular"
+            width="100%"
+            height={200}
+            sx={{ mb: "20px" }}
+          />
+          <Skeleton
+            variant="rectangular"
+            width="100%"
+            height={200}
+            sx={{ mb: "20px" }}
+          />
+          <Skeleton
+            variant="rectangular"
+            width="100%"
+            height={200}
+            sx={{ mb: "20px" }}
+          />
+        </Fragment>
+      ) : (
+        singleAssignedTaskCard
+      )}
     </Box>
   );
 }
