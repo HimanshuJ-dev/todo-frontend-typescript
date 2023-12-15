@@ -17,8 +17,9 @@ import CallReceivedIcon from "@mui/icons-material/CallReceived";
 import NightlightIcon from "@mui/icons-material/Nightlight";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { turnOnDarkMode, turnOnLightMode } from "../../redux/actions/userActions";
-import { userRootState } from "../../redux/reducers/userReducer";
+import { turnOnDarkMode, turnOnLightMode } from "../../redux/user/userActions";
+import { userRootState } from "../../redux/user/userReducer";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 
 export const Sidebar: React.FC = () => {
 
@@ -81,6 +82,14 @@ export const Sidebar: React.FC = () => {
                 <CallReceivedIcon />
               </ListItemIcon>
               <ListItemText primary="Recieved Tasks" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton component={Link} to="/all-users">
+              <ListItemIcon>
+                <PersonOutlineIcon />
+              </ListItemIcon>
+              <ListItemText primary="All Users" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>

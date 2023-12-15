@@ -1,8 +1,8 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import swal from "sweetalert";
-import { TASKS_TYPES } from "../types/tasksTypes";
-import { cancelTask, completeTask, createTask, deleteTask, editTask, getTasks } from "../service/tasksService";
-import { tasksResponseType } from "../reducers/tasksReducer";
+import { TASKS_TYPES } from "./tasksTypes";
+import { cancelTask, completeTask, createTask, deleteTask, editTask, getTasks } from "./tasksService";
+import { tasksResponseType } from "./tasksReducer";
 import { useNavigate } from "react-router-dom";
 
 type getTasksResponseType = {
@@ -11,14 +11,17 @@ type getTasksResponseType = {
 }
 
 function* workGetTasksFetch({ payload }: any) {
-    console.log("payload from saga:", payload);
-    yield put({ type: TASKS_TYPES.GET_TASKS_LOADING });
-    const response: getTasksResponseType = yield call(() => getTasks(payload))
+    
     try {
+        console.log("payload from saga:", payload);
+        yield put({ type: TASKS_TYPES.GET_TASKS_LOADING });
+        const response: getTasksResponseType = yield call(() =>
+          getTasks(payload)
+        );
         if (!response.tasks) {
             throw new Error("Could not load tasks");
         }
-        yield put({ type: TASKS_TYPES.GET_TASKS_SUCCESS, response: response.tasks });
+        yield put({ type: TASKS_TYPES.GET_TASKS_SUCCESS, response: response.tasks || [] });
     }
     catch (error) {
         yield put({ type: TASKS_TYPES.GET_TASKS_FAILED })
@@ -27,11 +30,14 @@ function* workGetTasksFetch({ payload }: any) {
 }
 
 function* workCreateTaskFetch({payload}: any) {
-    console.log("payload form saga", payload);
-    yield put({ type: TASKS_TYPES.CREATE_TASK_LOADING });
-    const response: getTasksResponseType = yield call(() => createTask(payload))
-    console.log("response form saga", response);
+    
     try {
+        console.log("payload form saga", payload);
+        yield put({ type: TASKS_TYPES.CREATE_TASK_LOADING });
+        const response: getTasksResponseType = yield call(() =>
+          createTask(payload)
+        );
+        console.log("response form saga", response);
         if (response.message !== "task created") {
             throw new Error("Could not create task");
         }
@@ -44,9 +50,12 @@ function* workCreateTaskFetch({payload}: any) {
 }
 
 function* workDeleteTaskFetch({payload}: any) {
-    console.log("payload from saga:", payload);
-    const response: getTasksResponseType = yield call(() => deleteTask(payload));
+    
     try {
+        console.log("payload from saga:", payload);
+        const response: getTasksResponseType = yield call(() =>
+          deleteTask(payload)
+        );
         if (response.message !== "task deleted") {
             throw new Error("Could not delete task");
         }
@@ -58,9 +67,12 @@ function* workDeleteTaskFetch({payload}: any) {
 }
 
 function* workEditTaskFetch({payload}: any) {
-    yield put({ type: TASKS_TYPES.EDIT_TASK_LOADING });
-    const response: getTasksResponseType = yield call(() => editTask(payload));
+    
     try {
+        yield put({ type: TASKS_TYPES.EDIT_TASK_LOADING });
+        const response: getTasksResponseType = yield call(() =>
+          editTask(payload)
+        );
         if (response.message !== "task updated") {
             throw new Error("Could not update task");
         }
@@ -73,8 +85,11 @@ function* workEditTaskFetch({payload}: any) {
 }
 
 function* workCompleteTaskFetch({payload}: any) {
-    const response: getTasksResponseType = yield call(() => completeTask(payload));
+    
     try {
+        const response: getTasksResponseType = yield call(() =>
+          completeTask(payload)
+        );
         if (response.message !== "task updated") {
             throw new Error("Could not update task");
         }
@@ -86,10 +101,11 @@ function* workCompleteTaskFetch({payload}: any) {
 }
 
 function* workCancelTaskFetch({payload}: any) {
-  const response: getTasksResponseType = yield call(() =>
-    cancelTask(payload)
-  );
-  try {
+  
+    try {
+      const response: getTasksResponseType = yield call(() =>
+        cancelTask(payload)
+      );
     if (response.message !== "task updated") {
       throw new Error("Could not update task");
     }

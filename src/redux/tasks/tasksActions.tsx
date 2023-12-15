@@ -1,4 +1,4 @@
-import { TASKS_TYPES } from "../types/tasksTypes";
+import { TASKS_TYPES } from "./tasksTypes";
 
 export const getTasksFetch = (currentUser: String) => ({
     type: TASKS_TYPES.GET_TASKS_FETCH,

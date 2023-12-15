@@ -5,11 +5,12 @@ import DoneIcon from "@mui/icons-material/Done";
 import ClearIcon from "@mui/icons-material/Clear";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { useDispatch,useSelector } from 'react-redux';
-import { deleteTaskFetch, getTasksFetch, markTaskCancelledFetch, markTaskCompletedFetch } from '../../redux/actions/tasksActions';
-import { UserState, userRootState } from '../../redux/reducers/userReducer';
-import { tasksResponseType, tasksRootState, tasksState } from '../../redux/reducers/tasksReducer';
-import { assignedTasksFetch, recievedTasksFetch } from '../../redux/actions/assignedTasksActions';
+import { deleteTaskFetch, getTasksFetch, markTaskCancelledFetch, markTaskCompletedFetch } from '../../redux/tasks/tasksActions';
+import { UserState, userRootState } from '../../redux/user/userReducer';
+import { tasksResponseType, tasksRootState, tasksState } from '../../redux/tasks/tasksReducer';
+import { assignedTasksFetch, recievedTasksFetch } from '../../redux/assignedTasks/assignedTasksActions';
 import { Link } from 'react-router-dom';
+import { getAllUsersFetch } from '../../redux/user/userActions';
 
 export const YourTasks = () => {
 
@@ -18,14 +19,15 @@ export const YourTasks = () => {
   // const currentUser = useSelector((state: UserState) => state.response?.userId);
   const currentUser = useSelector((state: userRootState) => state.user.response?.userId);
 
-  const isTasksLoading = useSelector((state: tasksRootState) => state.tasks.isTasksLoading);
+  const {isTasksLoading, tasks }= useSelector((state: tasksRootState) => state.tasks);
   
-  const tasks = useSelector((state: tasksRootState) => state.tasks.tasks);
+  // const tasks = useSelector((state: tasksRootState) => state.tasks);
 
   useEffect(() => {
     dispatch(getTasksFetch(currentUser!));
     dispatch(assignedTasksFetch(currentUser as String));
     dispatch(recievedTasksFetch(currentUser as String));
+    dispatch(getAllUsersFetch());
   }, []);
 
   const DeleteTask = (taskId: String, currentUser: String) => {
@@ -57,81 +59,83 @@ export const YourTasks = () => {
     }
 
   //change this to some known solution
-  const SingleTaskCard = (tasks as Array<tasksResponseType>).map((task) => {
-    return (
-      <Card sx={{ minWidth: 275, mb: "5px", borderRadius: "10px" }}>
-        <CardContent>
-          <Typography variant="h4" color="text.secondary" gutterBottom>
-            {task.title}
-          </Typography>
-          {task.status === "Pending" ? (
-            <Typography variant="body1" sx={{ mb: 1.5 }}>
-              <b>Priority: </b>
-              <b>
-                <span style={{ color: statusColor(task.priority) }}>
-                  {task.priority}
+  const SingleTaskCard = (tasks).map(
+    (task: tasksResponseType) => {
+      return (
+        <Card sx={{ minWidth: 275, mb: "5px", borderRadius: "10px" }}>
+          <CardContent>
+            <Typography variant="h4" color="text.secondary" gutterBottom>
+              {task.title}
+            </Typography>
+            {task.status === "Pending" ? (
+              <Typography variant="body1" sx={{ mb: 1.5 }}>
+                <b>Priority: </b>
+                <b>
+                  <span style={{ color: statusColor(task.priority) }}>
+                    {task.priority}
+                  </span>
+                </b>
+              </Typography>
+            ) : (
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                <b>Status:</b>{" "}
+                <span style={{ color: statusColor(task.status) }}>
+                  {task.status}
                 </span>
-              </b>
+              </Typography>
+            )}
+            <Typography variant="body1">
+              <b>Task Description:</b> {task.description}
             </Typography>
-          ) : (
-            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              <b>Status:</b>{" "}
-              <span style={{ color: statusColor(task.status) }}>
-                {task.status}
-              </span>
-            </Typography>
-          )}
-          <Typography variant="body1">
-            <b>Task Description:</b> {task.description}
-          </Typography>
-        </CardContent>
-        <Grid container justifyContent="space-between">
-          <CardActions>
-            {task.status === "Pending" && (
-              <Link
-                to={{
-                  pathname: "/edit-task",
-                }}
-                state={task}
-              >
-                <IconButton aria-label="Mark as Completed">
-                  <BorderColorIcon />
+          </CardContent>
+          <Grid container justifyContent="space-between">
+            <CardActions>
+              {task.status === "Pending" && (
+                <Link
+                  to={{
+                    pathname: "/edit-task",
+                  }}
+                  state={task}
+                >
+                  <IconButton aria-label="Mark as Completed">
+                    <BorderColorIcon />
+                  </IconButton>
+                </Link>
+              )}
+            </CardActions>
+            <CardActions>
+              {task.status === "Pending" && (
+                <IconButton
+                  aria-label="Mark as Completed"
+                  onClick={() =>
+                    markTaskAsCompeleted(task._id, currentUser as String)
+                  }
+                >
+                  <DoneIcon />
                 </IconButton>
-              </Link>
-            )}
-          </CardActions>
-          <CardActions>
-            {task.status === "Pending" && (
+              )}
+              {task.status === "Pending" && (
+                <IconButton
+                  aria-label="Mark as Cancelled"
+                  onClick={() =>
+                    markTaskAsCancelled(task._id, currentUser as String)
+                  }
+                >
+                  <ClearIcon />
+                </IconButton>
+              )}
               <IconButton
-                aria-label="Mark as Completed"
-                onClick={() =>
-                  markTaskAsCompeleted(task._id, currentUser as String)
-                }
+                aria-label="Delete"
+                onClick={() => DeleteTask(task._id, currentUser as String)}
               >
-                <DoneIcon />
+                <Delete />
               </IconButton>
-            )}
-            {task.status === "Pending" && (
-              <IconButton
-                aria-label="Mark as Cancelled"
-                onClick={() =>
-                  markTaskAsCancelled(task._id, currentUser as String)
-                }
-              >
-                <ClearIcon />
-              </IconButton>
-            )}
-            <IconButton
-              aria-label="Delete"
-              onClick={() => DeleteTask(task._id, currentUser as String)}
-            >
-              <Delete />
-            </IconButton>
-          </CardActions>
-        </Grid>
-      </Card>
-    );
-  });
+            </CardActions>
+          </Grid>
+        </Card>
+      );
+    }
+  );
 
   return (
     <Box>

@@ -6,8 +6,8 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { FC, Fragment, ReactElement } from 'react';
 import { useSelector } from 'react-redux';
-import { tasksResponseType } from '../../redux/reducers/tasksReducer';
-import { assignedTasksResponseType, assignedTasksRootState, receivedTasksRootState } from '../../redux/reducers/assignedTasksReducer';
+import { tasksResponseType } from '../../redux/tasks/tasksReducer';
+import { assignedTasksResponseType, assignedTasksRootState, receivedTasksRootState } from '../../redux/assignedTasks/assignedTasksReducer';
 
 type CustomListItemProps = {
   primaryText: string;

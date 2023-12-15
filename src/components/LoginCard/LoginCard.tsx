@@ -3,7 +3,7 @@ import { Box, Button, Card, IconButton, InputAdornment, TextField, Typography } 
 import React, {useState} from 'react'
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getUsersFetch } from '../../redux/actions/userActions';
+import { getUsersFetch } from '../../redux/user/userActions';
 
 export const displayError = (error: String) => {
   return (

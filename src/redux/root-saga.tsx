@@ -1,8 +1,8 @@
 import { all, call } from "redux-saga/effects";
 
-import userSaga from './userSaga';
-import tasksSaga from "./tasksSaga";
-import assignedTasksSaga from './assignedTasksSaga';
+import userSaga from './user/userSaga';
+import tasksSaga from "./tasks/tasksSaga";
+import assignedTasksSaga from './assignedTasks/assignedTasksSaga';
 
 export function* rootSaga() {
     yield all([

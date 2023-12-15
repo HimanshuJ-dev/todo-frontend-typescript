@@ -2,7 +2,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Box, Button, Card, IconButton, InputAdornment, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
-import { createUserFetch } from '../../redux/actions/userActions';
+import { createUserFetch } from '../../redux/user/userActions';
 import { displayError } from '../LoginCard/LoginCard';
 import { useNavigate } from 'react-router-dom';
 

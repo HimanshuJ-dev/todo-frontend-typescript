@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { editAssignedTaskFetch } from '../../redux/actions/assignedTasksActions';
+import { editAssignedTaskFetch } from '../../redux/assignedTasks/assignedTasksActions';
 import { Button, Card, Grid, MenuItem, Stack, TextField, Typography } from '@mui/material';
 import { displayError } from '../LoginCard/LoginCard';
 import { Delete, Send } from '@mui/icons-material';
-import { userRootState } from '../../redux/reducers/userReducer';
+import { userRootState } from '../../redux/user/userReducer';
 
 export const EditAssignedTask = () => {
   const navigate = useNavigate();

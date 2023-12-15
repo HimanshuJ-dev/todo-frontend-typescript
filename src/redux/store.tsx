@@ -4,8 +4,8 @@ import storage from "redux-persist/lib/storage";
 import logger from "redux-logger";
 import createSagaMiddleware from "redux-saga";
 
-import { rootSaga } from './sagas/root-saga';
-import { rootReducer } from "./reducers/root-reducer";
+import { rootSaga } from './root-saga';
+import { rootReducer } from "./root-reducer";
 
 export type RootState = ReturnType<typeof rootReducer>;
 

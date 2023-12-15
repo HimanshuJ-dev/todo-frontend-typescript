@@ -1,12 +1,12 @@
 
 import { Delete, Save } from '@mui/icons-material';
 import { Button, Card, Grid, MenuItem, Stack, TextField, Typography } from '@mui/material';
-import { createTasksFetch } from '../../redux/actions/tasksActions';
+import { createTasksFetch } from '../../redux/tasks/tasksActions';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { displayError } from '../LoginCard/LoginCard';
-import { userRootState } from '../../redux/reducers/userReducer';
+import { userRootState } from '../../redux/user/userReducer';
 
 export const CreateTask = () => {
   

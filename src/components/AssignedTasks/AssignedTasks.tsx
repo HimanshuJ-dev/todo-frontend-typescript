@@ -5,10 +5,10 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { Delete } from "@mui/icons-material";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { useDispatch, useSelector } from 'react-redux';
-import { assignedTasksFetch, deleteAssignedTaskFetch, markAssignedTaskCancelledFetch, markAssignedTaskCompletedFetch } from '../../redux/actions/assignedTasksActions';
-import { assignedTasksResponseType, assignedTasksRootState } from '../../redux/reducers/assignedTasksReducer';
+import { assignedTasksFetch, deleteAssignedTaskFetch, markAssignedTaskCancelledFetch, markAssignedTaskCompletedFetch } from '../../redux/assignedTasks/assignedTasksActions';
+import { assignedTasksResponseType, assignedTasksRootState } from '../../redux/assignedTasks/assignedTasksReducer';
 import { Link } from 'react-router-dom';
-import { userRootState } from '../../redux/reducers/userReducer';
+import { userRootState } from '../../redux/user/userReducer';
 
 export const AssignedTasks = () => {
 

@@ -1,4 +1,4 @@
-import { USER_TYPES } from "../types/userTypes"
+import { USER_TYPES } from "./userTypes"
 
 export type userPayloadType = {
     name?: String,
@@ -26,4 +26,8 @@ export const turnOnDarkMode = () => ({
 
 export const turnOnLightMode = () => ({
     type: USER_TYPES.TURN_LIGHT_MODE_ON
+})
+
+export const getAllUsersFetch = () => ({
+    type: USER_TYPES.GET_ALL_USERS_FETCH
 })

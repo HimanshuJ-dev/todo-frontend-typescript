@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Autocomplete,
   Button,
   Card,
   Grid,
@@ -7,15 +8,17 @@ import {
   Stack,
   TextField,
   Typography,
+  createFilterOptions,
 } from "@mui/material";
 import { Delete, Send } from "@mui/icons-material";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
-import { createTasksFetch } from '../../redux/actions/tasksActions';
-import { assignTaskFetch } from '../../redux/actions/assignedTasksActions';
+import { createTasksFetch } from '../../redux/tasks/tasksActions';
+import { assignTaskFetch } from '../../redux/assignedTasks/assignedTasksActions';
 import { displayError } from '../LoginCard/LoginCard';
-import { userRootState } from '../../redux/reducers/userReducer';
+import { userRootState } from '../../redux/user/userReducer';
+import { Data } from '../AllUsers/AllUsers';
 
 export const AssignTask = () => {
 
@@ -23,6 +26,7 @@ export const AssignTask = () => {
   const dispatch = useDispatch();
 
   const currentUser = useSelector((state: userRootState) => state.user.response?.userId);
+  const users: Data[] = useSelector((state: userRootState) => state.user.users);
 
   const [recieverEmail, setRecieverEmail] = useState("");
   const [taskName, setTaskName] = useState("");
@@ -62,12 +66,14 @@ export const AssignTask = () => {
       );
     }
   };
+  
+  const handleAutoCompleteInputChange = (email: string) => {
+    setRecieverEmail(email); 
+  };
 
   // Add a function to clear the errors when the input values change.
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Get the name and value of the input element.
     const { name, value } = e.target;
-    // Set the state of the corresponding input value.
     if (name === "taskReceiver") {
       setRecieverEmail(value);
     } else if (name === "title") {
@@ -77,7 +83,6 @@ export const AssignTask = () => {
     } else if (name === "priority") {
       setPriority(value);
     }
-    // Clear the email and password errors.
     setRecieverEmailError("");
     setTaskNameError("");
     setDescriptionError("");
@@ -95,15 +100,27 @@ export const AssignTask = () => {
         {descriptionError && displayError(descriptionError)}
         {priorityError && displayError(priorityError)}
         <form onSubmit={handleSubmit}>
-          <TextField
-            label="Receiver"
-            type="email"
-            name="taskReceiver"
-            value={recieverEmail}
-            onChange={handleInputChange}
-            required
-            fullWidth
-            sx={{ mb: "10px" }}
+          <Autocomplete
+            options={users}
+            getOptionLabel={(option) => option.name + " (" + option.email + ")"}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Receiver"
+                required
+                fullWidth
+                sx={{ mb: "10px" }}
+              />
+            )}
+            onInputChange={(event, newValue) => {
+              // newValue is the label of the selected option (name and email)
+              // You can extract the email from newValue and set it as the receiver email
+              const email = newValue.substring(
+                newValue.lastIndexOf("(") + 1,
+                newValue.lastIndexOf(")")
+              );
+              handleAutoCompleteInputChange(email); // Update the receiver email
+            }}
           />
           <TextField
             label="Task Title"
@@ -140,10 +157,10 @@ export const AssignTask = () => {
             rows={4}
           />
           <Grid container justifyContent="space-evenly">
-            <Button variant="outlined" type='reset' startIcon={<Delete />}>
+            <Button variant="outlined" type="reset" startIcon={<Delete />}>
               Reset
             </Button>
-            <Button variant="contained" type='submit' endIcon={<Send />}>
+            <Button variant="contained" type="submit" endIcon={<Send />}>
               Assign
             </Button>
           </Grid>

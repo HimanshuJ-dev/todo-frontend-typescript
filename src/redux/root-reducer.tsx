@@ -1,8 +1,8 @@
 import { combineReducers } from "redux";
 
-import { userReducer } from './userReducer';
-import { assignedTasksReducer, recievedTasksReducer } from './assignedTasksReducer';
-import { tasksReducer } from './tasksReducer';
+import { userReducer } from './user/userReducer';
+import { assignedTasksReducer, recievedTasksReducer } from './assignedTasks/assignedTasksReducer';
+import { tasksReducer } from './tasks/tasksReducer';
 
 export const rootReducer = combineReducers({
     user: userReducer,

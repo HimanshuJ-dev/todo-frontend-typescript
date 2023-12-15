@@ -2,7 +2,7 @@ import { createSelector } from "reselect";
 
 import { RootState } from "../store";
 
-import { assignedTasksState, recievedTasksState } from "../reducers/assignedTasksReducer";
+import { assignedTasksState, recievedTasksState } from "./assignedTasksReducer";
 
 export const selectAssignedTasksReducer = (state: RootState): assignedTasksState => state.tasks;
 

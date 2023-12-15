@@ -14,8 +14,8 @@ import RuleFolderIcon from "@mui/icons-material/RuleFolder";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { UserState, userRootState } from "../../redux/reducers/userReducer";
-import { signOutUser } from "../../redux/actions/userActions";
+import { UserState, userRootState } from "../../redux/user/userReducer";
+import { signOutUser } from "../../redux/user/userActions";
 import PersonIcon from "@mui/icons-material/Person";
 
 const theme = createTheme();

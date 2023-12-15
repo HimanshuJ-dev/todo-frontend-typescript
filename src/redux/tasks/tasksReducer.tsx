@@ -1,4 +1,4 @@
-import { TASKS_TYPES } from "../types/tasksTypes";
+import { TASKS_TYPES } from "./tasksTypes";
 
 export type tasksResponseType = {
   _id:String,

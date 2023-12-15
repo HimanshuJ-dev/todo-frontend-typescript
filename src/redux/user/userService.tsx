@@ -20,3 +20,9 @@ export function createUser({name, email, password}: {name: String, email: String
     .then((res) => res.data)
     .catch((err) => err);
 }
+
+export function getAllUsers() {
+  return axios.get("http://localhost:8080/all-users")
+    .then((res) => res.data)
+    .catch((err) => err);
+}

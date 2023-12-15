@@ -17,8 +17,9 @@ import { Home } from './Views/Home/Home';
 import { Login } from './Views/Login/Login';
 import { Signup } from './Views/Signup/Signup';
 import { useSelector } from 'react-redux';
-import { UserState, userRootState } from './redux/reducers/userReducer';
+import { UserState, userRootState } from './redux/user/userReducer';
 import { Spinner } from './components/Spinner/Spinner';
+import { AllUsers } from './components/AllUsers/AllUsers';
 
 function App() {
 
@@ -43,7 +44,9 @@ function App() {
       >
         <Navbar />
         <Stack direction="row" spacing={2} justifyContent="space-between">
-          {isUserLoading ? (<Spinner />) : currentUser ? (
+          {isUserLoading ? (
+            <Spinner />
+          ) : currentUser ? (
             <>
               <Sidebar />
               <Box flex={4} p={{ xs: 0, md: 2 }}>
@@ -65,6 +68,10 @@ function App() {
                     <Route
                       path="edit-assigned-task"
                       element={<EditAssignedTask />}
+                    />
+                    <Route
+                      path="all-users"
+                      element={<AllUsers />}
                     />
                   </Route>
                   <Route path="signup" element={<YourTasks />} />
